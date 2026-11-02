@@ -1,0 +1,76 @@
+/* VYNEX/public/image-motion.css — brings every content image to life (no plain, static pictures).
+   Works together with image-motion.js, which tags each picture's frame with .vx-frame and
+   adds .vx-in when it scrolls into view. Layers, all slow and soft:
+     1. reveal   – soft wipe when a frame scrolls in (frames not already revealed by GSAP)
+     2. settle   – the photo eases from a zoomed, slightly blurred state into focus
+     3. drift    – endless slow Ken-Burns pan/zoom (uses the `scale`/`translate` properties,
+                   so existing hover `transform: scale()` rules still stack on top)
+     4. sheen    – a light sweep across the picture every few seconds
+     5. glow     – a soft highlight that follows the cursor
+   Watermarks (.wm) are never animated. Everything is switched off for prefers-reduced-motion. */
+
+@property --vx-glow { syntax: "<number>"; inherits: false; initial-value: 0; }
+
+:root { --vx-ease: cubic-bezier(.22, 1, .36, 1); }
+
+/* ---------- frame overlay: sheen + cursor glow (one pseudo-element, two layers) ---------- */
+.vx-frame { position: relative; overflow: hidden; }
+.vx-frame::before {
+  content: ""; position: absolute; inset: 0; z-index: 2; pointer-events: none; mix-blend-mode: soft-light;
+  background:
+    radial-gradient(circle at calc(var(--px, .5) * 100%) calc(var(--py, .4) * 100%), rgba(255, 255, 255, calc(var(--vx-glow) * 1)) 0%, transparent 58%),
+    linear-gradient(105deg, transparent 38%, rgba(255, 255, 255, .5) 50%, transparent 62%);
+  background-size: 100% 100%, 260% 100%;
+  background-repeat: no-repeat;
+  background-position: 0 0, 160% 0;
+  animation: vx-sheen 9s ease-in-out var(--vx-sheen-delay, 2s) infinite;
+  --vx-glow: 0; transition: --vx-glow .6s ease;
+}
+.vx-host:hover .vx-frame::before, .vx-host:focus-visible .vx-frame::before, .vx-frame:hover::before { --vx-glow: .55; }
+
+/* small frames (avatars) only drift — no overlay */
+.vx-frame.vx-tiny::before { display: none; }
+
+/* ---------- 2 + 3. settle into focus, then drift forever ---------- */
+.vx-motion .vx-frame.vx-in img:not(.wm) {
+  transform-origin: 50% 50%;
+  will-change: scale, translate;
+  animation: vx-drift 26s ease-in-out infinite;
+}
+/* alternate the direction of the pan from frame to frame so neighbours don't move in lockstep */
+.vx-frame.vx-alt img:not(.wm) { --vx-x: 1.8%; --vx-y: -1.2%; animation-duration: 30s; }
+.vx-frame.vx-alt2 img:not(.wm) { --vx-x: -1.2%; --vx-y: 1.6%; animation-duration: 34s; }
+
+/* lightbox: the picture is shown at natural size, so no drift (it would crop) — just a zoom-in */
+.lightbox .vx-frame.vx-in img:not(.wm) { animation: vx-pop .7s var(--vx-ease) backwards; will-change: auto; scale: 1; }
+.lightbox .vx-frame::before { animation-delay: 1s; }
+
+/* avatars: a gentle breathing ring instead of a pan */
+.avatar.vx-frame { box-shadow: 0 0 0 0 rgba(255, 190, 40, .45); animation: vx-ring 5s ease-in-out infinite; }
+
+
+/* services hero picture: also floats up and down a little (adds to its tilt, doesn't replace it) */
+.hero-art.vx-frame { animation: vx-float 11s ease-in-out infinite; }
+
+/* "no image" placeholder on project cards: slow pulse so it doesn't look dead */
+.pf-noimg { animation: vx-pulse 4.5s ease-in-out infinite; }
+
+/* ---------- keyframes ---------- */
+@keyframes vx-wipe   { from { clip-path: inset(0 100% 0 0); opacity: 1; } to { clip-path: inset(0 0 0 0); opacity: 1; } }
+@keyframes vx-settle { from { scale: 1.3; filter: blur(7px) brightness(.7) saturate(.8); } to { scale: 1.07; filter: none; } }
+@keyframes vx-drift  {
+  0%, 100% { scale: 1.07; translate: 0 0; }
+  50%      { scale: 1.15; translate: var(--vx-x, -1.8%) var(--vx-y, -1.4%); }
+}
+@keyframes vx-pop    { from { opacity: 0; scale: .94; filter: blur(6px); } to { opacity: 1; scale: 1; filter: none; } }
+@keyframes vx-sheen  { 0% { background-position: 0 0, 160% 0; } 38%, 100% { background-position: 0 0, -60% 0; } }
+@keyframes vx-float  { 0%, 100% { translate: 0 0; } 50% { translate: 0 -12px; } }
+@keyframes vx-ring   { 0%, 100% { box-shadow: 0 0 0 0 rgba(255, 190, 40, .0); } 50% { box-shadow: 0 0 0 5px rgba(255, 190, 40, .22); } }
+@keyframes vx-pulse  { 0%, 100% { opacity: .55; } 50% { opacity: 1; } }
+
+/* ---------- accessibility ---------- */
+@media (prefers-reduced-motion: reduce) {
+  .vx-frame::before { animation: none; }
+  .vx-motion .vx-frame:not(.vx-in) img:not(.wm) { scale: 1; }
+  .vx-motion .vx-frame.vx-in img:not(.wm), .hero-art.vx-frame, .avatar.vx-frame, .pf-noimg { animation: none !important; }
+}

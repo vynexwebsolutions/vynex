@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="robots" content="noindex, nofollow">
+  <title>Admin Login | VYNEX</title>
+  <link rel="icon" type="image/png" sizes="32x32" href="images/favicon-32.png">
+  <link rel="icon" type="image/png" sizes="128x128" href="images/favicon.png">
+  <link rel="apple-touch-icon" href="images/apple-touch-icon.png">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="admin.css">
+  <link rel="stylesheet" href="admin-responsive.css">
+  <script src="../bg-scene.js" data-mode="admin" data-scene="trails" defer></script>
+</head>
+<body data-page="login" class="ready">
+  <div class="login-wrap">
+    <div class="login-card">
+      <div class="side-brand"><img class="brand-logo" src="images/logo.png" alt="" width="61" height="38"><span>VYNEX</span></div>
+      <p style="text-align:center;margin:0">Administrator sign in</p>
+      <form id="loginForm" novalidate>
+        <div class="form-grid">
+          <div class="field"><label for="email">Email</label><input id="email" name="email" type="email" required autocomplete="username"></div>
+          <div class="field"><label for="password">Password</label><input id="password" name="password" type="password" required autocomplete="current-password"></div>
+        </div>
+        <button class="btn btn-primary" type="submit">Sign in</button>
+        <p class="status" id="loginStatus" role="status" aria-live="polite" style="margin-top:14px"></p>
+      </form>
+      <a class="back-site" href="../index.html">← Back to website</a>
+    </div>
+  </div>
+  <script src="../config.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="../supabase.js"></script>
+  <script src="../icons.js"></script>
+  <script src="admin.js"></script>
+  <script src="auth.js"></script>
+</body>
+</html>

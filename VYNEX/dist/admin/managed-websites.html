@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="robots" content="noindex, nofollow">
+  <title>Managed Websites | VYNEX Admin</title>
+  <link rel="icon" type="image/png" sizes="32x32" href="images/favicon-32.png">
+  <link rel="icon" type="image/png" sizes="128x128" href="images/favicon.png">
+  <link rel="apple-touch-icon" href="images/apple-touch-icon.png">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="admin.css">
+  <link rel="stylesheet" href="admin-responsive.css">
+  <script src="../bg-scene.js" data-mode="admin" defer></script>
+</head>
+<body data-page="managed-websites">
+  <div class="admin-app">
+    <aside class="sidebar" id="sidebar"></aside>
+    <div class="admin-content">
+      <header class="topbar">
+        <button class="menu-btn" id="menuBtn" aria-label="Open menu"><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16"/></svg></button>
+        <h1>Managed Websites</h1>
+        <button class="btn btn-primary" id="addBtn">+ Add website</button>
+      </header>
+      <main class="admin-main">
+        <div class="alert" id="expAlert" hidden></div>
+        <div class="stats">
+          <div class="stat-card"><span>Websites managed</span><strong id="sTotal">–</strong></div>
+          <div class="stat-card"><span>Active</span><strong id="sActive">–</strong></div>
+          <div class="stat-card"><span>Expiring in 30 days</span><strong id="sSoon">–</strong></div>
+          <div class="stat-card"><span>Contracts ended</span><strong id="sEnded">–</strong></div>
+          <div class="stat-card"><span>Total received</span><strong id="sPaid" style="font-size:1.4rem">–</strong></div>
+          <div class="stat-card"><span>Balance owed</span><strong id="sBal" style="font-size:1.4rem">–</strong></div>
+        </div>
+        <div class="toolbar">
+          <input type="search" id="q" placeholder="Search website, owner, phone, host…" aria-label="Search">
+          <select id="f" aria-label="Filter"><option value="">All websites</option><option value="active">Active</option><option value="soon">Expiring soon</option><option value="ended">Contract ended</option><option value="suspended">Suspended</option><option value="terminated">Terminated</option></select>
+        </div>
+        <div class="table-wrap"><table>
+          <thead><tr><th>Website &amp; owner</th><th>Hosted on</th><th>Deployed</th><th>Contract ends</th><th>Time left</th><th>Paid</th><th>Actions</th></tr></thead>
+          <tbody id="rows"><tr><td colspan="7" class="empty">Loading…</td></tr></tbody>
+        </table></div>
+      </main>
+    </div>
+  </div>
+  <script src="../config.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="../supabase.js"></script>
+  <script src="../icons.js"></script>
+  <script src="admin.js"></script>
+  <script src="auth.js"></script>
+  <script src="managed-websites.js"></script>
+</body>
+</html>
