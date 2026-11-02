@@ -99,9 +99,13 @@
   .hero-art.vx-frame { animation: none; }
 }
 
-/* ===== phones: the live screens are drawn once and held still (smooth scrolling beats motion on a phone) ===== */
+/* ===== phones: keep the code scrolling (cheap GPU transform) but drop the heavy effects ===== */
 @media (max-width: 820px), (hover: none) {
-  .lv-wrap, .lv-wrap *, .lv-wrap *::before, .lv-wrap *::after { animation: none !important; will-change: auto !important; filter: none !important; backdrop-filter: none !important; }
+  .lv-wrap, .lv-wrap *, .lv-wrap *::before, .lv-wrap *::after { animation: none !important; filter: none !important; backdrop-filter: none !important; }
+  /* the only things that move: scrolling code/table rows and the blinking cursor */
+  .lv-wrap .lv-track { animation: lv-scroll var(--lv-dur, 40s) linear infinite !important; will-change: transform !important; backface-visibility: hidden; transform: translateZ(0); }
+  .lv-wrap .lv-caret { animation: lv-blink 1s steps(1) infinite !important; }
+  .lv-screen { contain: paint; }
   .lv-flicker { opacity: 1; }
   .lv-glass { box-shadow: none; mix-blend-mode: normal; }
   .hero-art, .hero-art.vx-frame { animation: none !important; transform: none !important; transition: none; box-shadow: 0 20px 40px -24px rgba(0,0,0,.8); }
