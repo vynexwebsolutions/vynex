@@ -1,0 +1,14 @@
+{
+  "name": "vynex",
+  "version": "1.0.0",
+  "private": true,
+  "description": "VYNEX Web Solutions — company website and admin panel (HTML, CSS, JavaScript, GSAP, Supabase)",
+  "scripts": {
+    "manifest": "node scripts/generate-image-manifest.js",
+    "build": "node scripts/build.js",
+    "dev": "node scripts/build.js && node scripts/dev-server.js",
+    "start": "node scripts/build.js && node scripts/dev-server.js"
+  },
+  "engines": { "node": ">=18" },
+  "license": "UNLICENSED"
+}

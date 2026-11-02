@@ -1,0 +1,100 @@
+/* VYNEX/public/image-live.css — "live screen" layer for the photos that show screens.
+   image-live.js builds real, moving content (scrolling code, charts, a browsing website) and
+   warps it onto each screen in the photo with a perspective matrix, so the screens look switched on. */
+
+.lv-wrap { position: absolute; inset: 0; z-index: 1; pointer-events: none; overflow: hidden; }
+.lv-stage { position: absolute; left: 0; top: 0; transform-origin: 0 0; }
+.lv-clip { position: absolute; left: 0; top: 0; width: 100%; height: 100%; }
+.lv-screen { position: absolute; left: 0; top: 0; transform-origin: 0 0; overflow: hidden; background: #0b0a26; }
+.lv-debug .lv-wrap { opacity: .55; }
+
+/* the photo keeps its own gentle drift; the live layer drifts with it so they never separate */
+.vx-motion .vx-frame.vx-live.vx-in img:not(.wm), .vx-motion .vx-frame.vx-live.vx-in .lv-wrap { animation: vx-drift2 40s ease-in-out infinite; }
+.vx-frame.vx-live::before { display: none; }
+@keyframes vx-settle2 { from { scale: 1.2; filter: blur(6px) brightness(.7); } to { scale: 1.03; filter: none; } }
+@keyframes vx-drift2 { 0%, 100% { scale: 1.03; translate: 0 0; } 50% { scale: 1.06; translate: -.8% -.6%; } }
+
+/* ---------- glass finish on every screen ---------- */
+.lv-glass { position: absolute; inset: 0; pointer-events: none; z-index: 9;
+  background: linear-gradient(115deg, rgba(255,255,255,.10) 0%, rgba(255,255,255,0) 38%), repeating-linear-gradient(0deg, rgba(0,0,0,.10) 0 1px, transparent 1px 3px);
+  box-shadow: inset 0 0 40px rgba(0,0,0,.45); }
+.lv-flicker { animation: lv-flick 7s steps(1) infinite; }
+@keyframes lv-flick { 0%, 92%, 100% { opacity: 1; } 93% { opacity: .93; } 94% { opacity: 1; } 96% { opacity: .95; } }
+
+/* ======================= CODE PANELS ======================= */
+.lv-code { position: absolute; inset: 0; overflow: hidden; font-family: "JetBrains Mono", ui-monospace, Menlo, Consolas, monospace; color: #dfe6ff;
+  background: linear-gradient(180deg, #0c0a2b 0%, #120b36 100%); }
+.lv-code .lv-gut { position: absolute; left: 0; top: 0; bottom: 0; width: 3.2em; background: rgba(255,255,255,.03); border-right: 1px solid rgba(160,140,255,.18); overflow: hidden; }
+.lv-track { position: absolute; left: 0; right: 0; top: 0; white-space: pre; animation: lv-scroll var(--lv-dur, 40s) linear infinite; will-change: transform; }
+.lv-track > div { height: 1.45em; line-height: 1.45em; padding-left: 4em; position: relative; }
+.lv-track > div > b { position: absolute; left: 0; width: 2.4em; text-align: right; color: #5b5890; font-weight: 400; }
+@keyframes lv-scroll { from { transform: translateY(0); } to { transform: translateY(-50%); } }
+.lv-code .k { color: #e86bff; } .lv-code .f { color: #55eeff; } .lv-code .s { color: #ffd75e; }
+.lv-code .c { color: #6f6aa8; font-style: italic; } .lv-code .n { color: #6bffb0; } .lv-code .p { color: #dfe6ff; }
+.lv-hl { position: absolute; left: 0; right: 0; height: 1.45em; background: linear-gradient(90deg, rgba(120,110,255,.28), rgba(120,110,255,.04)); border-left: 2px solid #55eeff; animation: lv-hl 11s steps(1) infinite; }
+@keyframes lv-hl { 0% { top: 22%; } 14% { top: 31%; } 29% { top: 40%; } 43% { top: 28%; } 57% { top: 52%; } 71% { top: 44%; } 86% { top: 60%; } }
+.lv-caret { display: inline-block; width: .55em; height: 1.1em; background: #55eeff; vertical-align: -.15em; animation: lv-blink 1s steps(1) infinite; }
+@keyframes lv-blink { 50% { opacity: 0; } }
+
+/* main screen chrome */
+.lv-main { position: absolute; inset: 0; display: grid; grid-template-columns: 6.5% 1fr 24%; grid-template-rows: 8% 1fr 7%; font-size: 100%; background: #0b0a28; }
+.lv-main .lv-tabs { grid-column: 1 / 4; display: flex; gap: 2px; align-items: flex-end; background: #0a0922; border-bottom: 1px solid rgba(160,140,255,.25); font: 600 1em/1 "Inter", sans-serif; color: #8d89c9; padding-left: 8%; }
+.lv-main .lv-tabs span { padding: .55em 1.4em; background: #120f36; border-radius: .5em .5em 0 0; }
+.lv-main .lv-tabs span.on { color: #fff; background: #1b1650; box-shadow: inset 0 2px 0 #55eeff; }
+.lv-main .lv-side { grid-row: 2 / 4; background: #0a0922; border-right: 1px solid rgba(160,140,255,.2); display: flex; flex-direction: column; align-items: center; gap: 1.4em; padding-top: 1.6em; }
+.lv-main .lv-side i { width: 1.1em; height: 1.1em; border: 2px solid #6e6ac2; border-radius: .25em; opacity: .8; }
+.lv-main .lv-side i:nth-child(2) { border-radius: 50%; } .lv-main .lv-side i:nth-child(4) { border-color: #55eeff; animation: lv-pulse 2.4s ease-in-out infinite; }
+.lv-main .lv-body { position: relative; overflow: hidden; }
+.lv-main .lv-term { position: relative; overflow: hidden; background: #0a0924; border-left: 1px solid rgba(160,140,255,.2); }
+.lv-main .lv-status { grid-column: 2 / 4; display: flex; align-items: center; gap: .9em; background: #17124a; border-top: 1px solid rgba(160,140,255,.25); padding: 0 1em; font: 500 .8em/1 "JetBrains Mono", monospace; color: #b9b4ff; }
+.lv-main .lv-status em { font-style: normal; color: #6bffb0; } .lv-main .lv-status u { flex: 1; height: .5em; background: #2a2470; border-radius: 1em; text-decoration: none; overflow: hidden; }
+.lv-main .lv-status u::after { content: ""; display: block; height: 100%; background: linear-gradient(90deg, #55eeff, #e86bff); animation: lv-fill 9s ease-in-out infinite; border-radius: 1em; }
+@keyframes lv-fill { 0% { width: 4%; } 70%, 85% { width: 100%; } 100% { width: 4%; } }
+@keyframes lv-pulse { 50% { opacity: .35; } }
+.lv-dot { width: .7em; height: .7em; border-radius: 50%; background: #6bffb0; box-shadow: 0 0 .8em #6bffb0; animation: lv-pulse 1.6s ease-in-out infinite; }
+
+/* table screen (purple monitor) */
+.lv-table { position: absolute; inset: 0; overflow: hidden; background: linear-gradient(180deg, #2a0a4a, #1c0638); font-family: "JetBrains Mono", monospace; color: #f0a8ff; }
+.lv-table .lv-track > div { padding-left: .6em; height: 1.5em; line-height: 1.5em; } .lv-table .lv-track span { color: #ff8bf2; } .lv-table .lv-track span:nth-child(2) { color: #b9a0ff; }
+
+/* bars widget */
+.lv-bars { position: absolute; inset: 0; display: flex; align-items: flex-end; gap: 7%; padding: 10% 8% 14%; background: linear-gradient(180deg, #121043, #0a0828); border-bottom: 1px solid rgba(160,140,255,.4); }
+.lv-bars i { flex: 1; background: linear-gradient(180deg, #e86bff, #55eeff); border-radius: 2px 2px 0 0; transform-origin: bottom; animation: lv-bar 3s ease-in-out infinite; }
+@keyframes lv-bar { 0%, 100% { transform: scaleY(.25); } 30% { transform: scaleY(1); } 55% { transform: scaleY(.55); } 80% { transform: scaleY(.85); } }
+
+/* rings (drawn straight on the photo, blended in) */
+.lv-ring { position: absolute; border-radius: 50%; mix-blend-mode: screen; pointer-events: none; }
+.lv-ring::before { content: ""; position: absolute; inset: 0; border-radius: 50%; border: 2px dashed rgba(85,238,255,.85); animation: lv-spin 14s linear infinite; }
+.lv-ring::after { content: ""; position: absolute; inset: 14%; border-radius: 50%; border: 2px solid transparent; border-top-color: #e86bff; border-bottom-color: #55eeff; animation: lv-spin 5s linear infinite reverse; }
+.lv-ring i { position: absolute; left: 50%; top: -3px; width: 7px; height: 7px; margin-left: -3px; border-radius: 50%; background: #fff; box-shadow: 0 0 8px 2px #55eeff; transform-origin: 3px calc(var(--r) + 3px); animation: lv-spin 6s linear infinite; }
+@keyframes lv-spin { to { transform: rotate(360deg); } }
+
+/* ======================= PROJECT SCREENSHOTS (unknown content) =======================
+   We can't know what is in a client's screenshot, so it gets "someone is using this page":
+   a mouse pointer that wanders and clicks (with a ripple), and tall full-page captures scroll. */
+.vx-frame.vx-browse::before { mix-blend-mode: normal; background: none; z-index: 3; width: 22px; height: 22px; inset: auto; margin: -11px 0 0 -11px; border-radius: 50%;
+  border: 2px solid rgba(255,205,0,.95); box-shadow: 0 0 10px rgba(255,205,0,.6); opacity: 0; animation: vx-ripple 13s linear var(--vx-sheen-delay, 0s) infinite; }
+.vx-frame.vx-browse::after { content: ""; position: absolute; z-index: 4; left: 80%; top: 80%; width: 20px; height: 26px; pointer-events: none;
+  background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 19 24'%3E%3Cpath d='M2 1v18l5-4.4 3.4 7.6 3-1.4-3.3-7.5H17z' fill='%23fff' stroke='%23000' stroke-width='1.6' stroke-linejoin='round'/%3E%3C/svg%3E") center / contain no-repeat;
+  filter: drop-shadow(0 2px 3px rgba(0,0,0,.6)); animation: vx-mouse 13s cubic-bezier(.45,0,.25,1) var(--vx-sheen-delay, 0s) infinite; }
+.pf-card .project-thumb.vx-frame::after { content: ""; }  /* (the gradient overlay lives on the thumb, not the screenshot frame) */
+@keyframes vx-mouse { 0% { left: 82%; top: 84%; } 14%, 22% { left: 30%; top: 42%; } 38%, 46% { left: 62%; top: 28%; } 62%, 70% { left: 48%; top: 72%; } 100% { left: 82%; top: 84%; } }
+@keyframes vx-ripple {
+  0%, 14% { left: 30%; top: 42%; opacity: 0; scale: 0; } 15% { left: 30%; top: 42%; opacity: .95; scale: .3; } 23% { left: 30%; top: 42%; opacity: 0; scale: 3; }
+  39% { left: 62%; top: 28%; opacity: 0; scale: 0; } 40% { left: 62%; top: 28%; opacity: .95; scale: .3; } 48% { left: 62%; top: 28%; opacity: 0; scale: 3; }
+  64% { left: 48%; top: 72%; opacity: 0; scale: 0; } 65% { left: 48%; top: 72%; opacity: .95; scale: .3; } 73%, 100% { left: 48%; top: 72%; opacity: 0; scale: 3; } }
+/* tall (full-page) screenshots scroll top → bottom → top like someone reading the page */
+.vx-motion .vx-frame.vx-scrolly.vx-in img:not(.wm) { animation: vx-scrollpage 22s ease-in-out infinite; scale: 1; translate: none; }
+@keyframes vx-scrollpage { 0%, 8% { object-position: 50% 0%; } 48%, 56% { object-position: 50% 100%; } 96%, 100% { object-position: 50% 0%; } }
+@media (prefers-reduced-motion: reduce) { .vx-frame.vx-browse::before, .vx-frame.vx-browse::after { display: none; } }
+
+/* reduced motion: keep the sharp screens, but freeze every animation */
+.lv-still .lv-wrap *, .lv-still .lv-wrap { animation: none !important; }
+.lv-still .lv-flicker { opacity: 1; }
+
+/* phones: crisper screens — no zoom/drift resampling, no scan-line moiré */
+@media (max-width: 700px) {
+  .vx-motion .vx-frame.vx-live.vx-in img:not(.wm), .vx-motion .vx-frame.vx-live.vx-in .lv-wrap { animation: none; scale: 1.03; will-change: auto; }
+  .lv-glass { background: linear-gradient(115deg, rgba(255,255,255,.08) 0%, rgba(255,255,255,0) 38%); }
+  .hero-art.vx-frame { animation: none; }
+}

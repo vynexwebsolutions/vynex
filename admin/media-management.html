@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="robots" content="noindex, nofollow">
+  <title>Media Management | VYNEX Admin</title>
+  <link rel="icon" type="image/png" sizes="32x32" href="images/favicon-32.png">
+  <link rel="icon" type="image/png" sizes="128x128" href="images/favicon.png">
+  <link rel="apple-touch-icon" href="images/apple-touch-icon.png">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="admin.css">
+  <link rel="stylesheet" href="admin-responsive.css">
+  <script src="../bg-scene.js" data-mode="admin" defer></script>
+</head>
+<body data-page="media" >
+  <div class="admin-app">
+    <aside class="sidebar" id="sidebar"></aside>
+    <div class="admin-content">
+      <header class="topbar">
+        <button class="menu-btn" id="menuBtn" aria-label="Open menu"><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16"/></svg></button>
+        <h1>Media Management</h1>
+        
+      </header>
+      <main class="admin-main">
+
+        <div class="panel">
+          <h2>Upload images</h2>
+          <div class="form-grid">
+            <div class="field"><label for="uploadFolder">Folder</label><select id="uploadFolder"><option value="general">general</option><option value="projects">projects</option><option value="services">services</option><option value="testimonials">testimonials</option><option value="branding">branding</option></select></div>
+            <div class="field"><label for="mediaFile">Choose images</label><input id="mediaFile" type="file" accept="image/*" multiple><small id="mediaSt">Images are compressed automatically. Max 12 MB each.</small></div>
+          </div>
+        </div>
+        <div class="toolbar"><div class="field" style="max-width:220px"><label for="folderFilter">Show folder</label><select id="folderFilter"><option value="">All folders</option><option value="general">general</option><option value="projects">projects</option><option value="services">services</option><option value="testimonials">testimonials</option><option value="branding">branding</option></select></div></div>
+        <div class="media-grid" id="mediaGrid"><div class="empty" style="grid-column:1/-1">Loading…</div></div>
+      </main>
+    </div>
+  </div>
+  <script src="../config.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="../supabase.js"></script>
+  <script src="../icons.js"></script>
+  <script src="admin.js"></script>
+  <script src="auth.js"></script>
+  <script src="media.js"></script>
+</body>
+</html>
