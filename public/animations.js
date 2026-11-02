@@ -7,7 +7,7 @@
   if (!window.gsap || reduce) return;
 
   const phone = window.matchMedia("(max-width: 820px), (hover: none)").matches;
-  const SLOW = phone ? 0.4 : 0.6;   // lower = faster; text must appear as soon as you scroll to it
+  const SLOW = phone ? 0.8 : 1;   // lower = faster; text must appear as soon as you scroll to it
   const d = (s) => s * SLOW;                       // scale a duration
   const gsap = window.gsap;
   if (window.ScrollTrigger) gsap.registerPlugin(window.ScrollTrigger);
@@ -40,7 +40,7 @@
 
     gsap.utils.toArray("[data-reveal]").forEach((el) => {
       if (el.dataset.done) return; el.dataset.done = 1;
-      gsap.fromTo(el, { y: 20, opacity: 0 }, { y: 0, opacity: 1, duration: d(1.6), ease: "power2.out",
+      gsap.fromTo(el, { y: 30, opacity: 0 }, { y: 0, opacity: 1, duration: d(1.6), ease: "power2.out",
         scrollTrigger: { id: "vx", trigger: el, start: "top bottom+=250", once: true } });
     });
 
@@ -48,7 +48,7 @@
       // Grids filled from the database get new children after the first pass: animate those too (otherwise they stay hidden = blank).
       if (wrap.dataset.done && wrap._kid === wrap.firstElementChild) return;
       wrap.dataset.done = 1; wrap._kid = wrap.firstElementChild;
-      gsap.fromTo(wrap.children, { y: 20, opacity: 0 }, { y: 0, opacity: 1, duration: d(1.4), stagger: d(.1), ease: "power2.out",
+      gsap.fromTo(wrap.children, { y: 30, opacity: 0 }, { y: 0, opacity: 1, duration: d(1.4), stagger: d(.14), ease: "power2.out",
         scrollTrigger: { id: "vx", trigger: wrap, start: "top bottom+=250", once: true } });
     });
 
@@ -89,7 +89,7 @@
 
   // Page transitions: soft, unhurried cross-fade between pages
   function transitions() {
-    gsap.fromTo("body", { opacity: 0 }, { opacity: 1, duration: .25, ease: "power1.out", clearProps: "opacity" });
+    gsap.fromTo("body", { opacity: 0 }, { opacity: 1, duration: .5, ease: "power1.out", clearProps: "opacity" });
     document.addEventListener("click", (e) => {
       const a = e.target.closest("a[href]");
       if (!a || a.target === "_blank" || e.metaKey || e.ctrlKey || e.shiftKey) return;
