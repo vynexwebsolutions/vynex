@@ -126,6 +126,8 @@
       var k = Math.max(fw / scene.w, fh / scene.h);                       // same maths as object-fit: cover
       st.style.transform = "translate(" + (fw - scene.w * k) / 2 + "px," + (fh - scene.h * k) / 2 + "px) scale(" + k + ")";
     }
+    // pause every animation while the picture is off-screen (saves battery and keeps scrolling smooth)
+    if ("IntersectionObserver" in window) new IntersectionObserver(function (es) { frame.classList.toggle("lv-off", !es[0].isIntersecting); }, { rootMargin: "80px" }).observe(frame);
     fit();
     if ("ResizeObserver" in window) new ResizeObserver(fit).observe(frame); else addEventListener("resize", fit);
     if (location.search.indexOf("lvdebug") > -1) document.documentElement.classList.add("lv-debug");
