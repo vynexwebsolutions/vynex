@@ -21,7 +21,7 @@
 }
 
 /* ===== mobile clarity fixes ===== */
-html, body { overflow-x: hidden; max-width: 100%; }
+html, body { overflow-x: clip; max-width: 100%; }
 @media (max-width: 640px) {
   #vynex-bg { opacity: .25; }
   .panel, .stat-card, .table-wrap { background: rgba(13,18,36,.95); }
@@ -34,4 +34,86 @@ html, body { overflow-x: hidden; max-width: 100%; }
   .btn-row .btn { width: 100%; text-align: center; }
   .login-card { padding: 24px 20px; }
   input, select, textarea { font-size: 16px; }
+}
+
+/* ===== COMPACT SIZING — smaller text and graphics across the whole admin panel ===== */
+body { font-size: 13.5px; line-height: 1.5; }
+@media (min-width: 961px) { .admin-app { grid-template-columns: 220px 1fr; } }
+@media (max-width: 960px) { .admin-app { grid-template-columns: 1fr; } }
+.sidebar { padding: 16px 12px; }
+.side-brand { font-size: 1rem; padding: 2px 8px 16px; gap: 8px; }
+.brand-logo { height: 30px; }
+.side-nav { gap: 2px; }
+.side-nav a { padding: 8px 10px; font-size: .82rem; gap: 10px; border-radius: 8px; }
+.side-nav a .ico { width: 15px; height: 15px; }
+.side-nav a > span { width: 16px; }
+.side-user { font-size: .72rem; padding-top: 12px; }
+.topbar { padding: 11px 22px; }
+.topbar h1 { font-size: 1.05rem; }
+.menu-btn { width: 36px; height: 36px; border-radius: 8px; }
+.menu-btn .ico { width: 17px; height: 17px; }
+.admin-main { padding: 20px 22px; }
+.btn { padding: 8px 14px; font-size: .78rem; border-radius: 8px; gap: 6px; }
+.btn-sm { padding: 4px 10px; font-size: .7rem; border-radius: 7px; }
+.btn-row { gap: 6px; }
+.stats { grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 12px; margin-bottom: 20px; }
+.stat-card { padding: 13px 15px; border-radius: 12px; }
+.stat-card span { font-size: .66rem; letter-spacing: .05em; }
+.stat-card strong { font-size: 1.45rem; margin-top: 2px; }
+.panel { padding: 16px 18px; border-radius: 12px; margin-bottom: 16px; }
+.panel h2 { font-size: .92rem; margin-bottom: .6em; }
+.toolbar { margin-bottom: 14px; gap: 8px; }
+table { font-size: .8rem; }
+th, td { padding: 9px 12px; }
+th { font-size: .66rem; }
+td .thumb { width: 50px; height: 34px; border-radius: 6px; }
+.tbl-ico { width: 30px; height: 30px; border-radius: 8px; }
+.tbl-ico .ico { width: 16px; height: 16px; }
+.badge { padding: 2px 9px; font-size: .66rem; }
+.activity li { padding: 9px 0; font-size: .8rem; }
+.activity time { font-size: .72rem; }
+.form-grid { gap: 13px; }
+.field label { font-size: .73rem; }
+.field input[type=text], .field input[type=email], .field input[type=url], .field input[type=number], .field input[type=password], .field textarea, .field select { padding: 8px 11px; font-size: .84rem; border-radius: 8px; }
+.field textarea { min-height: 90px; }
+.field small { font-size: .7rem; }
+.check { font-size: .82rem; }
+.check input { width: 15px; height: 15px; }
+.img-field .preview { max-width: 220px; }
+.shots { grid-template-columns: repeat(auto-fill, minmax(130px, 1fr)); gap: 10px; }
+.media-grid { grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 12px; }
+.media-item div { padding: 8px 10px; font-size: .72rem; }
+.alert { padding: 10px 14px; font-size: .8rem; margin-bottom: 16px; }
+.status { font-size: .8rem; }
+.modal { padding: 20px; border-radius: 14px; }
+.modal h2 { font-size: 1.02rem; margin-bottom: 14px; }
+.detail-row { font-size: .8rem; padding: 8px 0; grid-template-columns: 110px 1fr; }
+.toast { padding: 9px 14px; font-size: .8rem; }
+.countdown strong { font-size: 1.25rem; }
+.dropzone .dz-ico { width: 36px; height: 36px; border-radius: 11px; }
+.contact-box { padding: 14px 16px; }
+.ico-inline { width: .95em; height: .95em; }
+.login-card { width: min(380px, 100%); padding: 28px; }
+.login-card .side-brand { font-size: 1.2rem; }
+.login-card .brand-logo { height: 34px; }
+.login-card .btn { padding: 10px; font-size: .85rem; }
+.back-site { font-size: .78rem; }
+
+@media (max-width: 960px) {
+  .sidebar { width: 240px; }
+  .topbar { padding: 10px 14px; }
+  .admin-main { padding: 14px 12px; }
+}
+@media (max-width: 640px) {
+  body { font-size: 13px; }
+  .topbar h1 { font-size: .98rem; }
+  .stats { grid-template-columns: 1fr 1fr; gap: 10px; }
+  .stat-card { padding: 11px 12px; }
+  .stat-card span { font-size: .62rem; }
+  .stat-card strong { font-size: 1.25rem; }
+  .panel { padding: 13px; margin-bottom: 12px; }
+  th, td { padding: 8px 10px; }
+  .btn { padding: 8px 12px; }
+  .side-nav a { padding: 10px 10px; }
+  .login-card { padding: 22px 18px; }
 }
