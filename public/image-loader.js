@@ -14,7 +14,7 @@
         const bySlot = img.dataset.imageSlot && m.images.find((i) => i.category === img.dataset.imageSlot);
         const hit = byName || bySlot;
         if (!hit) return;
-        img.loading = img.loading || "lazy";
+        img.loading = img.loading || "eager";
         img.decoding = "async";
         img.addEventListener("load", () => {
           const ph = img.parentElement && img.parentElement.querySelector(".placeholder");

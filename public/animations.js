@@ -6,7 +6,8 @@
   const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
   if (!window.gsap || reduce) return;
 
-  const SLOW = 1;
+  const phone = window.matchMedia("(max-width: 820px), (hover: none)").matches;
+  const SLOW = phone ? 0.4 : 0.6;   // lower = faster; text must appear as soon as you scroll to it
   const d = (s) => s * SLOW;                       // scale a duration
   const gsap = window.gsap;
   if (window.ScrollTrigger) gsap.registerPlugin(window.ScrollTrigger);
@@ -39,23 +40,23 @@
 
     gsap.utils.toArray("[data-reveal]").forEach((el) => {
       if (el.dataset.done) return; el.dataset.done = 1;
-      gsap.fromTo(el, { y: 30, opacity: 0 }, { y: 0, opacity: 1, duration: d(1.6), ease: "power2.out",
-        scrollTrigger: { id: "vx", trigger: el, start: "top 88%", once: true } });
+      gsap.fromTo(el, { y: 20, opacity: 0 }, { y: 0, opacity: 1, duration: d(1.6), ease: "power2.out",
+        scrollTrigger: { id: "vx", trigger: el, start: "top bottom+=250", once: true } });
     });
 
     gsap.utils.toArray("[data-stagger]").forEach((wrap) => {
       // Grids filled from the database get new children after the first pass: animate those too (otherwise they stay hidden = blank).
       if (wrap.dataset.done && wrap._kid === wrap.firstElementChild) return;
       wrap.dataset.done = 1; wrap._kid = wrap.firstElementChild;
-      gsap.fromTo(wrap.children, { y: 34, opacity: 0 }, { y: 0, opacity: 1, duration: d(1.4), stagger: d(.17), ease: "power2.out",
-        scrollTrigger: { id: "vx", trigger: wrap, start: "top 86%", once: true } });
+      gsap.fromTo(wrap.children, { y: 20, opacity: 0 }, { y: 0, opacity: 1, duration: d(1.4), stagger: d(.1), ease: "power2.out",
+        scrollTrigger: { id: "vx", trigger: wrap, start: "top bottom+=250", once: true } });
     });
 
     // Image reveal (soft clip-path wipe)
     gsap.utils.toArray("[data-img-reveal]").forEach((el) => {
       if (el.dataset.done) return; el.dataset.done = 1;
       gsap.fromTo(el, { clipPath: "inset(0 100% 0 0)" }, { clipPath: "inset(0 0% 0 0)", duration: d(2.2), ease: "power3.inOut",
-        scrollTrigger: { id: "vx", trigger: el, start: "top 85%", once: true } });
+        scrollTrigger: { id: "vx", trigger: el, start: "top bottom+=250", once: true } });
     });
 
     // Parallax (smoothed so it glides instead of snapping to the scroll position)
@@ -88,7 +89,7 @@
 
   // Page transitions: soft, unhurried cross-fade between pages
   function transitions() {
-    gsap.fromTo("body", { opacity: 0 }, { opacity: 1, duration: d(1), ease: "power1.out", clearProps: "opacity" });
+    gsap.fromTo("body", { opacity: 0 }, { opacity: 1, duration: .25, ease: "power1.out", clearProps: "opacity" });
     document.addEventListener("click", (e) => {
       const a = e.target.closest("a[href]");
       if (!a || a.target === "_blank" || e.metaKey || e.ctrlKey || e.shiftKey) return;
@@ -99,8 +100,8 @@
       // Fade out, then go. The timer is a safety net: if the fade never finishes (background tab, paused animation
       // clock) the link must still work.
       let gone = false; const go = () => { if (!gone) { gone = true; location.href = a.href; } };
-      gsap.to("body", { opacity: 0, duration: d(.55), ease: "power1.in", onComplete: go });
-      setTimeout(go, 1200);
+      gsap.to("body", { opacity: 0, duration: .2, ease: "power1.in", onComplete: go });
+      setTimeout(go, 600);
     });
     window.addEventListener("pageshow", () => gsap.set("body", { opacity: 1 }));
   }
@@ -109,17 +110,24 @@
 
   transitions();
   const safe = (fn) => { try { fn(); } catch (e) { console.warn("[vynex] animation step failed:", e); } };
-  window.addEventListener("load", () => {
+  let started = false;
+  const boot = () => {
+    if (started) return; started = true;
     safe(hero); safe(scrollAnims); safe(progress);
+    if (window.ScrollTrigger) addEventListener("load", () => ScrollTrigger.refresh());
+  };
+  if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", boot); else boot();
+  addEventListener("load", boot);
+  window.addEventListener("load", () => {
     // Safety net: anything on screen (or already scrolled past) that is still invisible gets shown, so a section can never stay blank.
     const rescue = () => {
       document.querySelectorAll("[data-reveal], [data-stagger] > *").forEach((el) => {
         const r = el.getBoundingClientRect();
-        if (r.top < innerHeight && parseFloat(getComputedStyle(el).opacity) < 0.05) gsap.to(el, { opacity: 1, y: 0, duration: .6, overwrite: "auto" });
+        if (r.top < innerHeight + 200 && parseFloat(getComputedStyle(el).opacity) < 0.05) gsap.to(el, { opacity: 1, y: 0, duration: .3, overwrite: "auto" });
       });
     };
-    let n = 0; const iv = setInterval(() => { rescue(); if (++n > 20) clearInterval(iv); }, 1000);
-    let t; addEventListener("scroll", () => { clearTimeout(t); t = setTimeout(rescue, 700); }, { passive: true });
+    let n = 0; const iv = setInterval(() => { rescue(); if (++n > 20) clearInterval(iv); }, 500);
+    let t; addEventListener("scroll", () => { clearTimeout(t); t = setTimeout(rescue, 150); }, { passive: true });
   });
   // Safety: never leave content hidden if something goes wrong
   setTimeout(() => { if (!window.ScrollTrigger) document.documentElement.classList.remove("js-anim"); }, 4000);

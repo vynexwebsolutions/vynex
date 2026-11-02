@@ -117,3 +117,16 @@
   if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", init); else init();
   window.addEventListener("load", function () { icons(); gfx(); });
 })();
+
+/* Faster loading while scrolling: once the page has loaded, fetch every lazy image right away
+   (including project/testimonial images added later from the database) so nothing shows blank. */
+(function () {
+  function eager(img) { if (img.loading === "lazy") img.loading = "eager"; }
+  function all() { document.querySelectorAll('img[loading="lazy"]').forEach(eager); }
+  addEventListener("load", function () { setTimeout(all, 300); });
+  new MutationObserver(function (m) {
+    m.forEach(function (r) { r.addedNodes.forEach(function (n) { if (n.nodeType === 1) { if (n.tagName === "IMG") eager(n); else if (n.querySelectorAll) n.querySelectorAll('img[loading="lazy"]').forEach(eager); } }); });
+  }).observe(document.documentElement, { childList: true, subtree: true });
+  // open the connection to the database early so lists appear faster
+  try { var u = window.VYNEX_CONFIG && window.VYNEX_CONFIG.SUPABASE_URL; if (u) { var l = document.createElement("link"); l.rel = "preconnect"; l.href = u; l.crossOrigin = ""; document.head.appendChild(l); } } catch (e) {}
+})();
